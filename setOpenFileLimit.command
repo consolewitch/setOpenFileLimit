@@ -3,10 +3,13 @@ echo ==========================================================================
 echo  This will set the default max open files for all users on your Mac 
 echo ==========================================================================
 echo
-DEFAULTMAXOPENFILES=524288
-read -p "To what value should I set your max open files limit? [524288]: " MAXOPENFILES 
-echo 
-MAXOPENFILES=${MAXOPENFILES:-$DEFAULTMAXOPENFILES}
+DEFAULTHARDMAXOPENFILES=524288
+DEFAULTSOFTMAXOPENFILES=4096
+read -p "To what value should I set your HARD open files limit? [524288]: " HARDMAXOPENFILES 
+read -p "To what value should I set your SOFT open files limit? [4096]: " SOFTMAXOPENFILES
+echo
+HARDMAXOPENFILES=${HARDMAXOPENFILES:-$DEFAULTHARDMAXOPENFILES}
+SOFTMAXOPENFILES=${SOFTMAXOPENFILES:-$DEFAULTSOFTMAXOPENFILES}
 cat <<EOM >/tmp/limit.maxfiles.plist
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
@@ -20,8 +23,8 @@ cat <<EOM >/tmp/limit.maxfiles.plist
       <string>launchctl</string>
       <string>limit</string>
       <string>maxfiles</string>
-      <string>$MAXOPENFILES</string>
-      <string>$MAXOPENFILES</string>
+      <string>$SOFTMAXOPENFILES</string>
+      <string>$HARDMAXOPENFILES</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
